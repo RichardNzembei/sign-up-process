@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+</head>
+<body>
+    <h2>Add Expense</h2>
+    <form id="addExpenseForm">
+        <label for="expenseName">Expense Name:</label><br>
+        <input type="text" id="expenseName" name="expenseName" required><br><br>
+        <label for="expenseAmount">Expense Amount:</label><br>
+        <input type="number" id="expenseAmount" name="expenseAmount" step="0.01" required><br><br>
+        <button type="submit">Add Expense</button>
+    </form>
+
+    <div id="result"></div>
+    <h2>Retrieve Expenses</h2>
+    <button id="retrieveExpensesBtn">Retrieve Expenses</button>
+
+    <div id="expensesList"></div>
+
+    <script>
+        document.getElementById('addExpenseForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get expense data from the form
+            const expenseName = document.getElementById('expenseName').value;
+            const expenseAmount = document.getElementById('expenseAmount').value;
+
+            // Send expense data to backend using fetch API
+            fetch('http://localhost:3000/add-expense', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: expenseName, amount: expenseAmount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display result from backend
+                document.getElementById('result').innerText = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'An error occurred. Please try again later.';
+            });
+        });
+        document.getElementById('retrieveExpensesBtn').addEventListener('click', function() {
+            fetch('http://localhost:3000/get-expenses')
+            .then(response => response.json())
+            .then(data => {
+                displayExpenses(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        function displayExpenses(expenses) {
+            const expensesList = document.getElementById('expensesList');
+            expensesList.innerHTML = ''; // Clear previous content
+
+            if (expenses.length === 0) {
+                expensesList.innerHTML = 'No expenses found.';
+                return;
+            }
+
+            const ul = document.createElement('ul');
+            expenses.forEach(expense => {
+                const li = document.createElement('li');
+                li.textContent = `${expense.name}: $${expense.amount}`;
+                ul.appendChild(li);
+            });
+            expensesList.appendChild(ul);
+        }
+    </script>
+</body>
+</html>
