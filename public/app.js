@@ -1,6 +1,14 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require("cors");
+const path = require('path');
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Define routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'register.html'));
+});
 
 
 const app = express();
