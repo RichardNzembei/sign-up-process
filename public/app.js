@@ -12,13 +12,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'register.html'));
 });
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 
 const connection = mysql.createConnection({
-    host: 'sql8.freemysqlhosting.net',
-    user: 'sql8698234',
-    password: 'fWYZTpee9U',
-    database: 'sql8698234',
+    host: 'localhost',
+    user: 'robin',
+    password: 'Richie@innit4',
+    database: 'expenses',
     port: 3306
 });
 
